@@ -1,43 +1,39 @@
 class Cruise {
-    private final String identifier;
-    private final int arrivalTime;
-    private final int numOfLoaders;
-    private final int serviceTime;
-    private static final int hourInMin = 60;
+    private final String id;
+    private final int aT;
+    private final int nL;
+    private final int sT;
+    private static final TimeConverter converter = new TimeConverter();
 
     Cruise(String id, int aT, int nL, int sT) {
-        this.identifier = id;
-        this.arrivalTime = aT;
-        this.numOfLoaders = nL;
-        this.serviceTime = sT;
+        this.id = id;
+        this.aT = aT;
+        this.nL = nL;
+        this.sT = sT;
     }
-
+    
+    public String getId() {
+        return this.id;
+    }
+    
     public int getServiceTime() {
-        return this.serviceTime;
+        return this.sT;
     }
 
     public int getArrivalTime() {
-        return this.hourMinToMin(this.arrivalTime);
-    }
-    
-    public int getNumOfLoadersRequired() {
-        return this.numOfLoaders;
-    }
-    
-    public int hourMinToMin(double hourMin) {
-        int hours = (int) hourMin / 100;
-        int mins = (int) hourMin % 100;
-        return hours * hourInMin + mins;
+        return converter.hourToMins(this.aT);
     }
 
-    public int minToHourMin(int min) {
-        int hours = min / hourInMin;
-        int mins = min % hourInMin;
-        return hours * 100 + mins;
+    public int getNumOfLoadersRequired() {
+        return nL;
+    }
+
+    public Cruise serveOne() {
+        return new Cruise(this.id, this.aT, this.nL - 1, this.sT);
     }
 
     @Override
     public String toString() {
-        return this.identifier + "@" + String.format("%04d",this.arrivalTime);
-    }    
+        return this.id + "@" + String.format("%04d", this.aT);
+    }
 }

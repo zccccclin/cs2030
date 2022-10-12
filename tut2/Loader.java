@@ -1,29 +1,26 @@
-import java.util.Arrays;
-
 class Loader {
-    private final int identifier;
-    private final int numOfLoaders;
+    private final int id;
+    private final int nL;
     
-    Loader(int numOfLoaders) {
-        this(numOfLoaders, 0); 
+    Loader(int nL) {
+        this(1, nL);
     }
-
-    Loader(int numOfLoaders, int identifier) {
-        this.numOfLoaders = numOfLoaders;
-        this.identifier = identifier;
+    
+    Loader(int nextId, int nL) {
+        this.nL = nL;
+        if (nextId % nL == 0) {
+            this.id = nL;
+        } else {
+            this.id = nextId % nL;
+        }
     }
-
 
     public Loader nextLoader() {
-        if ((this.identifier + 1) > numOfLoaders) {
-            return new Loader(this.numOfLoaders, 1);
-        } else {
-            return new Loader(this.numOfLoaders, this.identifier + 1);
-        }
+        return new Loader(this.id + 1, this.nL);
     }
 
     @Override
     public String toString() {
-        return "Loader #" + this.identifier;
-    }  
+        return "Loader #" + this.id;
+    }
 }
