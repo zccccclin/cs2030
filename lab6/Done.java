@@ -10,9 +10,10 @@ class Done implements Event {
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
-        Server s = servers.get(this.serverIdx);
-        s = s.popCustomer();
-        servers = servers.set(this.serverIdx, s);
+        Server server = servers.get(this.serverIdx);
+        server = server.popCustomer();
+        server = server.rest();
+        servers = servers.set(this.serverIdx, server);
         return new Pair<Event, ImList<Server>>(new Exit(), servers);
     }
 

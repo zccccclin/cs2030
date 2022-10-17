@@ -1,16 +1,20 @@
+import java.util.function.Supplier;
+
 class Server {
     private final int id;
     private final ImList<Customer> queue;
     private final ImList<Customer> nowServing;
     private final int maxQ;
     private final double finishTime;
+    private final Supplier<Double> restTimes;
 
-    Server(int id, int maxQ) {
+    Server(int id, int maxQ, Supplier<Double> restTimes) {
         this.id = id;
         this.maxQ = maxQ;
         this.queue = new ImList<Customer>();
         this.nowServing = new ImList<Customer>();
         this.finishTime = 0.0;
+        this.restTimes = restTimes;
     }
 
     Server(Server server, ImList<Customer> nowServing, ImList<Customer> queue, double finishTime) {
@@ -19,6 +23,7 @@ class Server {
         this.nowServing = nowServing;
         this.queue = queue;
         this.finishTime = finishTime;
+        this.restTimes = server.restTimes;
     }
 
     public Server addCustomer(Customer customer) {
@@ -41,6 +46,10 @@ class Server {
         double finishTime = timeOfService + nowServing.getServiceTime();
         return new Pair<Server, Double>(
             new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
+    }
+
+    public Server rest() {
+        return new Server(this, this.nowServing, this.queue, this.finishTime + this.restTimes.get());
     }
 
     public double getFinishTime() {
