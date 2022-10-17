@@ -17,7 +17,7 @@ class Serve implements Event {
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
         Server server = servers.get(this.serverIdx);
-        if (server.canServe()) {
+        if (this.eventId == "SERVE") {
             Pair<Server, Double> result = server.serveCustomer(this.time);
             server = result.first();
             double finishTime = result.second();
