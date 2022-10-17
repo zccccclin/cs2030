@@ -22,11 +22,13 @@ class Serve implements Event {
             server = result.first();
             double finishTime = result.second();
             servers = servers.set(this.serverIdx, server);
-            return new Pair<Event, ImList<Server>>(new Done(this.customer, this.serverIdx, finishTime), servers);
+            return new Pair<Event, ImList<Server>>(
+                new Done(this.customer, this.serverIdx, finishTime), servers);
         }
         double finishTime = server.getFinishTime();
         boolean nowServing = server.nextInLine(this.customer);
-        return new Pair<Event, ImList<Server>>(new Serve(this.customer, this.serverIdx, finishTime, nowServing), servers);
+        return new Pair<Event, ImList<Server>>(
+            new Serve(this.customer, this.serverIdx, finishTime, nowServing), servers);
 
     }
 

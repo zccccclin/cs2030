@@ -19,7 +19,8 @@ class Arrive implements Event {
                 if (server.getFinishTime() < this.customer.getArrivalTime()) {
                     timeOfService = this.customer.getArrivalTime();
                 }
-                return new Pair<Event, ImList<Server>>(new Serve(this.customer, serverIdx, timeOfService, true), servers);
+                return new Pair<Event, ImList<Server>>(
+                    new Serve(this.customer, serverIdx, timeOfService, true), servers);
             }
         }
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {

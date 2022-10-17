@@ -39,7 +39,8 @@ class Server {
         updatedQueue = updatedQueue.remove(0);
         ImList<Customer> updatedNowServing = this.nowServing.add(nowServing);
         double finishTime = timeOfService + nowServing.getServiceTime();
-        return new Pair<Server, Double>(new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
+        return new Pair<Server, Double>(
+            new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
 
     public double getFinishTime() {
