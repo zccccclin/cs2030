@@ -3,10 +3,10 @@ class Done implements Event {
     private final int serverIdx;
     private final double time;
 
-    Done(Customer customer, int serverIdx) {
+    Done(Customer customer, int serverIdx, double finishTime) {
         this.customer = customer;
         this.serverIdx = serverIdx;
-        this.time = customer.getTos() + customer.getServiceTime();
+        this.time = finishTime;
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {

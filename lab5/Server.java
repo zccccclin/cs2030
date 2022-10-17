@@ -1,56 +1,61 @@
 class Server {
     private final int id;
-    private final ImList<Customer> customers;
+    private final ImList<Customer> queue;
+    private final ImList<Customer> nowServing;
     private final int maxQ;
-    private final double tos;
     private final double finishTime;
 
     Server(int id, int maxQ) {
         this.id = id;
         this.maxQ = maxQ;
-        this.customers = new ImList<Customer>();
-        this.tos = 0.0;
+        this.queue = new ImList<Customer>();
+        this.nowServing = new ImList<Customer>();
         this.finishTime = 0.0;
     }
 
-    Server(int id, int maxQ, ImList<Customer> customers, double tos, double finishTime) {
-        this.id = id;
-        this.maxQ = maxQ;
-        this.customers = customers;
-        this.tos = tos;
+    Server(Server server, ImList<Customer> nowServing, ImList<Customer> queue, double finishTime) {
+        this.id = server.id;
+        this.maxQ = server.maxQ;
+        this.nowServing = nowServing;
+        this.queue = queue;
         this.finishTime = finishTime;
     }
 
     public Server addCustomer(Customer customer) {
-        ImList<Customer> customers = this.customers;
-        customers = customers.add(customer);
-        double finishTime = customer.getTos() + customer.getServiceTime();
-        return new Server(this.id, this.maxQ, customers, tos, finishTime);
+        ImList<Customer> queue = this.queue;
+        queue = queue.add(customer);
+        return new Server(this, this.nowServing, queue, this.finishTime);
     }
     
     public Server popCustomer() {
-        ImList<Customer> customers = this.customers;
-        customers = customers.remove(0);
-        return new Server(this.id, this.maxQ, customers, this.tos, this.finishTime);
+        ImList<Customer> nowServing = this.nowServing;
+        nowServing = nowServing.remove(0);
+        return new Server(this, nowServing, this.queue, this.finishTime);
     }
 
-    public double getTos(Customer c) {
-        if (this.customers.isEmpty()) {
-            return this.finishTime;
-        }
-        return this.customers.get(customers.indexOf(c)).getTos();
+    public Pair<Server, Double> serveCustomer(double timeOfService) {
+        Customer nowServing = this.queue.get(0);
+        ImList<Customer> updatedQueue = this.queue;
+        updatedQueue = updatedQueue.remove(0);
+        ImList<Customer> updatedNowServing = this.nowServing.add(nowServing);
+        double finishTime = timeOfService + nowServing.getServiceTime();
+        return new Pair<Server, Double>(new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
 
     public double getFinishTime() {
         return this.finishTime;
     }
 
+    public boolean nextInLine(Customer customer) {
+        return this.queue.get(0).getId() == customer.getId();
+    }
+    
     public boolean canQueue() {
-        return this.customers.size() <= this.maxQ;
+        return this.queue.size() < this.maxQ;
     }
 
     public boolean canServe() {
-        return this.customers.isEmpty();
+        return this.nowServing.isEmpty();
     }
 
     public int getId() {
@@ -59,6 +64,6 @@ class Server {
 
     @Override
     public String toString() {
-        return "Server " + this.getId() + ": " + this.customers.toString();
+        return "Server " + this.getId() + ": " + this.queue.toString();
     }
 }

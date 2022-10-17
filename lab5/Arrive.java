@@ -9,23 +9,25 @@ class Arrive implements Event {
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
         boolean queueFlag = true;
-        for (int i = 0; i < servers.size(); i++) {
-            Server s = servers.get(i);
-            if (s.canServe()) {
+        for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
+            Server server = servers.get(serverIdx);
+            if (server.canServe()) {
                 queueFlag = false;
-                Customer customer = this.customer.nextInLine(s.getFinishTime());
-                s = s.addCustomer(customer);
-                servers = servers.set(i, s);
-                return new Pair<Event, ImList<Server>>(new Serve(customer, i), servers);
+                server = server.addCustomer(this.customer);
+                servers = servers.set(serverIdx, server);
+                double timeOfService = server.getFinishTime();
+                if (server.getFinishTime() < this.customer.getArrivalTime()) {
+                    timeOfService = this.customer.getArrivalTime();
+                }
+                return new Pair<Event, ImList<Server>>(new Serve(this.customer, serverIdx, timeOfService, true), servers);
             }
         }
-        for (int i = 0; i < servers.size(); i++) {
-            Server s = servers.get(i);
-            if (s.canQueue() && queueFlag) {
-                Customer customer = this.customer.nextInLine(s.getFinishTime());
-                s = s.addCustomer(customer);
-                servers = servers.set(i, s);
-                return new Pair<Event, ImList<Server>>(new Wait(customer, i), servers);
+        for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
+            Server server = servers.get(serverIdx);
+            if (server.canQueue() && queueFlag) {
+                server = server.addCustomer(this.customer);
+                servers = servers.set(serverIdx, server);
+                return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx), servers);
             }
         }
         return new Pair<Event, ImList<Server>>(new Leave(this.customer), servers);

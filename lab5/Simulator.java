@@ -44,14 +44,14 @@ class Simulator {
             if (event.getEvent() != "EXIT") {
                 if (event.getEvent() == "SERVE") {
                     serveCnt += 1;
+                    totalWaitTime += event.getWaitTime();
                 }
                 if (event.getEvent() == "LEAVE") {
                     leaveCnt += 1;
                 }
-                if (event.getEvent() == "WAIT") {
-                    totalWaitTime += event.getWaitTime();
+                if (event.getEvent() != "FUTURESERVE") {
+                    output = output + event.toString() + "\n";
                 }
-                output = output + event.toString() + "\n";
                 Pair<Event, ImList<Server>> result = event.execute(updatedServers);
                 event = result.first();
                 updatedServers = result.second();
