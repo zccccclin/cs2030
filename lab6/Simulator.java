@@ -5,7 +5,7 @@ class Simulator {
     private final ImList<Server> servers;
     private final ImList<Customer> customers;
 
-    Simulator(int numOfServers, int qmax, ImList<Pair<Double, Supplier<Double>>> inputTimes) {
+    Simulator(int numOfServers, int qmax, ImList<Pair<Double, Supplier<Double>>> inputTimes, Supplier<Double> restTimes) {
         ImList<Server> servers = new ImList<Server>();
         for (int id = 1; id < numOfServers + 1; id++) {
             Server server = new Server(id, qmax);
