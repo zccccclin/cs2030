@@ -49,7 +49,8 @@ class Server {
     }
 
     public Server rest() {
-        return new Server(this, this.nowServing, this.queue, this.finishTime + this.restTimes.get());
+        double restTime = this.restTimes.get();
+        return new Server(this, this.nowServing, this.queue, this.finishTime + restTime);
     }
 
     public double getFinishTime() {

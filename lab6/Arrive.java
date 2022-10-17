@@ -11,7 +11,7 @@ class Arrive implements Event {
         boolean queueFlag = true;
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
-            if (server.canServe()) {
+            if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
                 queueFlag = false;
                 server = server.addCustomer(this.customer);
                 servers = servers.set(serverIdx, server);
