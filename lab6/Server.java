@@ -54,7 +54,6 @@ class Server {
 
     public Server rest() {
         double restTime = this.restTimes.get();
-        System.out.println(String.format("rest time: %s", restTime));
         return new Server(this, this.nowServing, this.queue, this.finishTime + restTime);
     }
 
