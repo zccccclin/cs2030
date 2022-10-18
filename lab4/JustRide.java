@@ -9,9 +9,9 @@ class JustRide extends Service {
     @Override
     public int computeFare(int distance, int numOfPass, int tos) {
         if (super.isPeakHourRide(tos)) {
-            return this.surcharge + distance * this.rate;
+            return surcharge + distance * rate;
         }
-        return distance * this.rate;
+        return distance * rate;
     }
 
     @Override

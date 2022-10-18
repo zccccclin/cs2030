@@ -11,8 +11,8 @@ abstract class Service {
     }
     
     protected boolean isPeakHourRide(int tos) {
-        int tosInMins = this.converter.hourToMin(tos);
-        if (tosInMins >= this.peakHourStart && tosInMins <= this.peakHourEnd) {
+        int tosInMins = converter.hourToMin(tos);
+        if (tosInMins >= peakHourStart && tosInMins <= peakHourEnd) {
             return true;
         }
         return false;

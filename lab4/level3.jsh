@@ -7,6 +7,9 @@
 /open TakeACab.java
 /open NormalCab.java
 /open Booking.java
+/open ShareARide.java
+/open PrivateCar.java
+/open FareAndTimeComparator.java
 
 new NormalCab("SHA1234", 5)
 new Booking(new NormalCab("SHA1234", 5), new Request(20, 3, 1000))

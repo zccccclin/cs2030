@@ -7,7 +7,7 @@ class TakeACab extends Service {
     }
 
     public int computeFare(int d, int n, int t) {
-        return d * this.fare + this.bookingFare;
+        return d * fare + bookingFare;
     }
 
     @Override

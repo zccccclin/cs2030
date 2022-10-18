@@ -8,9 +8,9 @@ class ShareARide extends Service {
 
     public int computeFare(int d, int n, int t) {
         if (super.isPeakHourRide(t)) {
-            return (d * this.rate + this.surcharge) / n;
+            return (d * rate + surcharge) / n;
         }
-        return (d * this.rate) / n;
+        return (d * rate) / n;
     }
     
     @Override

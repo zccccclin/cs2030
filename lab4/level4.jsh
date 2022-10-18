@@ -9,7 +9,7 @@
 /open Booking.java
 /open ShareARide.java
 /open PrivateCar.java
-/open FareComparator.java
+/open FareAndTimeComparator.java
 
 new ShareARide()
 new PrivateCar("SMA7890", 5)
