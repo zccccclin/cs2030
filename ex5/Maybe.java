@@ -1,9 +1,12 @@
 import java.util.function.Function;
+import java.lang.Runnable;
+import java.util.function.Predicate;
+import java.util.function.Consumer;
 
 class Maybe<T> {
     private final T thing;
 
-    private Maybe(T thing) {
+    public Maybe(T thing) {
         this.thing = thing;
     }
 
@@ -31,6 +34,48 @@ class Maybe<T> {
             return empty();
         }
         return of(thing);
+    }
+
+    public Maybe<T> filter(Predicate<? super T> pred) {
+        if (this.thing == null || !pred.test(this.thing)) {
+            return empty();
+        }
+        return Maybe.<T>of(this.thing);
+    }
+
+    public void ifPresent(Consumer<? super T> action) {
+        if (this.thing != null) {
+            action.accept(this.thing);
+        }
+    }
+
+    public void ifPresentOrElse(Consumer<? super T> action, Runnable emptyAction) {
+        if (this.thing != null) {
+            action.accept(this.thing);
+        } else {
+            emptyAction.run();
+        } 
+    }
+
+    public T orElse(T other) {
+        if (this.thing != null) {
+            return this.thing;
+        }
+        return other;
+    }
+
+    public T orElseGet(Supplier<? extends T> supplier) {
+        if (this.thing != null) {
+            return this.thing;
+        }
+        return supplier.get();
+    }
+
+    public Maybe<T> or(Supplier<Maybe<? super T>> supplier) {
+        if (this.thing != null) {
+            return Maybe.<T>of(this.thing);
+        }
+        return supplier.get();
     }
 
     @Override
