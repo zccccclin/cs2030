@@ -39,6 +39,7 @@ class Simulator {
         double totalWaitTime = 0;
 
         while (!eventQueue.isEmpty()) {
+            //System.out.println(eventQueue);
             Event event = eventQueue.poll().first();
             eventQueue = eventQueue.poll().second();
             if (event.getEvent() != "EXIT") {

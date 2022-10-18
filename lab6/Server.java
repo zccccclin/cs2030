@@ -26,6 +26,10 @@ class Server {
         this.restTimes = server.restTimes;
     }
 
+    public Server setFinishTime(double time) {
+        return new Server(this, this.nowServing, this.queue, time);
+    }
+
     public Server addCustomer(Customer customer) {
         ImList<Customer> queue = this.queue;
         queue = queue.add(customer);
@@ -50,6 +54,7 @@ class Server {
 
     public Server rest() {
         double restTime = this.restTimes.get();
+        System.out.println(String.format("rest time: %s", restTime));
         return new Server(this, this.nowServing, this.queue, this.finishTime + restTime);
     }
 

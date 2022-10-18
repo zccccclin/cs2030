@@ -26,7 +26,7 @@ class Serve implements Event {
                 new Done(this.customer, this.serverIdx, finishTime), servers);
         }
         double finishTime = server.getFinishTime();
-        boolean nowServing = server.nextInLine(this.customer);
+        boolean nowServing = server.nextInLine(this.customer) && server.canServe();
         return new Pair<Event, ImList<Server>>(
             new Serve(this.customer, this.serverIdx, finishTime, nowServing), servers);
 

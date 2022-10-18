@@ -12,9 +12,8 @@ class Wait implements Event {
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
         Server server = servers.get(this.serverIdx);
         double timeOfService = server.getFinishTime();
-        boolean nowServing = server.nextInLine(this.customer);
         return new Pair<Event, ImList<Server>>(
-            new Serve(this.customer, this.serverIdx, timeOfService, nowServing), servers); 
+            new Serve(this.customer, this.serverIdx, timeOfService, false), servers); 
     }
 
     public double getWaitTime() {

@@ -14,13 +14,14 @@ class Arrive implements Event {
             if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
                 queueFlag = false;
                 server = server.addCustomer(this.customer);
-                servers = servers.set(serverIdx, server);
                 double timeOfService = server.getFinishTime();
                 if (server.getFinishTime() < this.customer.getArrivalTime()) {
                     timeOfService = this.customer.getArrivalTime();
                 }
+                server = server.setFinishTime(timeOfService);
+                servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(
-                    new Serve(this.customer, serverIdx, timeOfService, true), servers);
+                    new Serve(this.customer, serverIdx, timeOfService, false), servers);
             }
         }
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
