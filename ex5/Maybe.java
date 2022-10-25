@@ -2,6 +2,7 @@ import java.util.function.Function;
 import java.lang.Runnable;
 import java.util.function.Predicate;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 class Maybe<T> {
     private final T thing;
@@ -26,6 +27,15 @@ class Maybe<T> {
             return Maybe.<R>empty();
         } else {
             return Maybe.<R>of(mapper.apply(this.thing));
+        }
+    }
+
+    public <R> Maybe<R> flatMap(Function<? super T, ? extends Maybe<? extends R>> mapper) {
+        if (this.thing == null) {
+            return Maybe.<R>empty();
+        } else {
+            Supplier<? extends Maybe<? extends R>> supp = () -> mapper.apply(this.thing);
+            return this.or(supp);
         }
     }
 
@@ -71,9 +81,9 @@ class Maybe<T> {
         return supplier.get();
     }
 
-    public Maybe<T> or(Supplier<Maybe<? super T>> supplier) {
-        if (this.thing != null) {
-            return Maybe.<T>of(this.thing);
+    public Maybe<? extends T> or(Supplier<? extends Maybe<? extends T>> supplier) {
+        if (thing != null) {
+            return this;
         }
         return supplier.get();
     }
