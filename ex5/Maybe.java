@@ -34,8 +34,9 @@ class Maybe<T> {
         if (this.thing == null) {
             return Maybe.<R>empty();
         } else {
-            Supplier<? extends Maybe<? extends R>> supp = () -> mapper.apply(this.thing);
-            return this.or(supp);
+            @SuppressWarnings("unchecked")
+            Maybe<R> r = (Maybe<R>) mapper.apply(this.thing);
+            return r;
         }
     }
 
