@@ -34,9 +34,9 @@ class Maybe<T> {
         if (this.thing == null) {
             return Maybe.<R>empty();
         } else {
-            @SuppressWarnings("unchecked")
-            Maybe<R> r = (Maybe<R>) mapper.apply(this.thing);
-            return r;
+            Maybe<? extends R> maybeMapped = mapper.apply(this.thing);
+            Maybe<R> r = Maybe.<R>of(maybeMapped.orElse(null));
+            return r;   
         }
     }
 
@@ -69,30 +69,34 @@ class Maybe<T> {
     }
 
     public T orElse(T other) {
-        if (this.thing != null) {
-            return this.thing;
+        if (this.thing == null) {
+            return other;
         }
-        return other;
+        return this.thing;
     }
 
     public T orElseGet(Supplier<? extends T> supplier) {
-        if (this.thing != null) {
-            return this.thing;
-        }
-        return supplier.get();
+        return orElse(supplier.get());
     }
 
-    public Maybe<? extends T> or(Supplier<? extends Maybe<? extends T>> supplier) {
+    public Maybe<T> or(Supplier<? extends Maybe<? extends T>> supplier) {
         if (thing != null) {
             return this;
         }
-        return supplier.get();
+        Maybe<? extends T> result = supplier.get();
+        return Maybe.<T>of(result.thing);
     }
 
     @Override
     public boolean equals(Object o) {
         if (o instanceof Maybe) {
-            if (this.thing == ((Maybe) o).thing) {
+            if (this.thing == null && ((Maybe) o).thing == null) {
+                return true;
+            }
+            if (this.thing == null || ((Maybe) o).thing == null) {
+                return false;
+            }
+            if (this.thing.equals(((Maybe) o).thing)) {
                 return true;
             }
             return false;
