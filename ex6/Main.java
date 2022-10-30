@@ -18,4 +18,9 @@ class Main {
     static String reverse(String str) {
         return Stream.<String>of(str.split("")).reduce("", (x, y) -> y + x);
     }
+
+    // Task 3
+    static long countRepeats(List<Integer> list) {
+        return 0.0;   
+    }
 }
