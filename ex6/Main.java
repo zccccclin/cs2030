@@ -58,16 +58,12 @@ class Main {
         if (idx == last) {
             return list.get(last) == 1 || (list.get(last) == 0 && list.get(last - 1) == 1);
         }
-        boolean scenario1 = list.get(idx) == 1;
-        boolean scenario2 = list.get(idx) == 0 && 
-            (list.get(idx - 1) == 1 && list.get(idx + 1) != 1);
-        boolean scenario3 = list.get(idx) == 0 && 
-            (list.get(idx - 1) != 1 && list.get(idx + 1) == 1);
-        return scenario1 || scenario2 || scenario3;
+        return list.get(idx) == 1 || 
+            (list.get(idx) == 0 && list.get(idx - 1) + list.get(idx + 1) == 1);
     }
 
     static Stream<String> gameOfLife(List<Integer> list, UnaryOperator<List<Integer>> rule, int n) {
-        return Stream.iterate(list, generateRule()).limit(n).map(x -> {
+        return Stream.iterate(list, rule).limit(n).map(x -> {
             return IntStream.range(0, x.size()).mapToObj(i -> {
                 if (x.get(i) == 0) {
                     return ".";
