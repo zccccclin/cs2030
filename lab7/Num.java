@@ -2,7 +2,7 @@ import java.util.Optional;
 
 class Num extends AbstractNum<Integer> {
     protected Num(AbstractNum<Integer> absNum) {
-       super(absNum.opt.filter(AbstractNum.valid));
+        super(absNum.opt.filter(AbstractNum.valid));
     }
     
     protected Num(Optional<Integer> opt) {
@@ -24,7 +24,7 @@ class Num extends AbstractNum<Integer> {
     }
 
     static Num one() {
-        return new Num(Optional.<Integer>of(1));
+        return Num.zero().succ();
     }
 
     public Num succ() {
@@ -49,7 +49,7 @@ class Num extends AbstractNum<Integer> {
         if (!num.isValid() || !this.isValid()) {
             return Num.empty();
         } 
-        Num result = Num.of(0);
+        Num result = Num.zero();
         AbstractNum<Integer> absNum = 
             new AbstractNum<Integer>(num.opt.map(AbstractNum.n));
         while (!absNum.equals(Num.zero())) {

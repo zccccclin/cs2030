@@ -20,34 +20,53 @@ class Fraction extends AbstractNum<Frac> {
         return new Fraction(numA, numB);
     }
     
-    // public Fraction add(Fraction other) {
-    //     Num a = this.opt.map(x -> x.first());
-    //     Num b = this.opt.map(x -> x.second());
-    //     Num c = other.opt.map(x -> x.first());
-    //     Num d = other.opt.map(x -> x.second());
-    //     Num ad = a.mul(d);
-    //     Num bc = b.mul(c);
-    //     Num bd = b.mul(d);
-    //     return Fraction.of(ad.add(bc), bd);
-    // }
+    public Fraction add(Fraction other) {
+        Optional<Frac> optFrac = this.opt.flatMap(x -> 
+            other.opt.map(y -> {
+                Num a = x.first();
+                Num b = x.second();
+                Num c = y.first();
+                Num d = y.second();
+                Num ad = a.mul(d);
+                Num bc = b.mul(c);
+                Num bd = b.mul(d);
+                return Frac.of(ad.add(bc), bd);
+            }).filter(z -> 
+                z.first().isValid() && z.second().isValid() && 
+                !z.second().equals(Num.zero())));
+        return new Fraction(optFrac);
+    }
 
-    // public Fraction sub(Fraction other) {
-    //     Num a = this.opt.map(x -> x.first());
-    //     Num b = this.opt.map(x -> x.second());
-    //     Num c = other.opt.map(x -> x.first());
-    //     Num d = other.opt.map(x -> x.second());
-    //     Num ad = a.mul(d);
-    //     Num bc = b.mul(c);
-    //     Num bd = b.mul(d);
-    //     return Fraction.of(ad.sub(bc), bd);
-    // }
-    // public Fraction mul(Fraction other) {
-    //     Num a = this.opt.map(x -> x.first());
-    //     Num b = this.opt.map(x -> x.second());
-    //     Num c = other.opt.map(x -> x.first());
-    //     Num d = other.opt.map(x -> x.second());
-    //     Num ac = a.mul(c);
-    //     Num bd = b.mul(d);
-    //     return Fraction.of(ac, bd);
-    // }
+    public Fraction sub(Fraction other) {
+        Optional<Frac> optFrac = this.opt.flatMap(x -> 
+            other.opt.map(y -> {
+                Num a = x.first();
+                Num b = x.second();
+                Num c = y.first();
+                Num d = y.second();
+                Num ad = a.mul(d);
+                Num bc = b.mul(c);
+                Num bd = b.mul(d);
+                return Frac.of(ad.sub(bc), bd);
+            }).filter(z -> 
+                z.first().isValid() && z.second().isValid() && 
+                !z.second().equals(Num.zero())));
+        return new Fraction(optFrac);
+    }
+
+    public Fraction mul(Fraction other) {
+        Optional<Frac> optFrac = this.opt.flatMap(x -> 
+            other.opt.map(y -> {
+                Num a = x.first();
+                Num b = x.second();
+                Num c = y.first();
+                Num d = y.second();
+                Num ac = a.mul(c);
+                Num bd = b.mul(d);
+                return Frac.of(ac, bd);
+            }).filter(z -> 
+                z.first().isValid() && z.second().isValid() && 
+                !z.second().equals(Num.zero())));
+        return new Fraction(optFrac);
+    }
 }
