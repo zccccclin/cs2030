@@ -1,3 +1,4 @@
+import java.util.stream.Stream;
 class Expr<T> {
     private final T value;
     private final Stream<Operator<T>> operatorStream; 
@@ -14,13 +15,13 @@ class Expr<T> {
         return new Expr<U>(value, operatorStream);
     }
 
-    public Expr<T> op(Operator<? extends T> operator, T otherValue) {
+    public Expr<T> op(Operator<T> operator, T otherValue) {
         T result = operator.apply(this.value, otherValue);
         return Expr.<T>of(result);
     }
     
-    public Expr<T> op(Operator<? extends T> operator, Expr<T> otherOperatedValue) {
-        T result = operator.apply(this.value, otherOperatoredValue.value);
+    public Expr<T> op(Operator<T> operator, Expr<T> otherExpr) {
+        T result = operator.apply(this.value, otherExpr.value);
         return Expr.<T>of(result);
     }
 
