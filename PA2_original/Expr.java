@@ -7,6 +7,11 @@ class Expr<T> {
         this.operatorStream = operatorStream;
     }
 
+    protected Expr(Expr<T> expr) {
+        this.value = expr.value;
+        this.operatorStream = expr.operatorStream;
+    }
+
     static <U> Expr<U> of(U value) {
         return new Expr<U>(value, Stream.<Operator<U>>of());
     }

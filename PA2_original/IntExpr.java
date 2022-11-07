@@ -6,17 +6,25 @@ class IntExpr extends AbstractIntExpr {
     private static final Operator<Integer> exponentiation = 
         Operator.<Integer>of((x, y) -> (int) Math.pow(x, y), 2);
 
-    static of(int value) {
-        return super(Expr.<Integer>of(value));
+    private IntExpr(Expr<Integer> value) {
+        super(value);
+    }
+    
+    static IntExpr of(int value) {
+        return new IntExpr(Expr.<Integer>of(value));
+    }
+
+    static IntExpr of(Expr<Integer> valueExpr) {
+        return new IntExpr(valueExpr);
     }
 
     public IntExpr add(int toAdd) {
-        Expr<Integer> result = this.op(super.addition, toAdd);
+        Expr<Integer> result = this.op(addition, toAdd);
         return of(result);
     }
 
     public IntExpr mul(int toMul) {
-        Expr<Integer> result = this.op(super.multiplication, toMul);
+        Expr<Integer> result = this.op(multiplication, toMul);
         return of(result);
     }
 
@@ -34,8 +42,5 @@ class IntExpr extends AbstractIntExpr {
         Expr<Integer> result = this.op(exponentiation, toExp);
         return of(result);
     }
-
-    
-
 }
 
