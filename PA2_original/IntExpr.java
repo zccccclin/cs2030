@@ -42,8 +42,5 @@ class IntExpr extends AbstractIntExpr {
         Expr<Integer> result = this.op(exponentiation, toExp);
         return of(result);
     }
-
-    
-
 }
 
