@@ -4,7 +4,7 @@ class IntExpr extends AbstractIntExpr {
     private static final Operator<Integer> division = 
         Operator.<Integer>of((x, y) -> x / y, 3);
     private static final Operator<Integer> exponentiation = 
-        Operator.<Integer>of((x, y) -> (int) Math.pow(x, y), 2);
+        Operator.<Integer>of((x, y) -> {int result = x; for (int i = 1; i < y; i++){result *= x;} return result;}, 2);
 
     private IntExpr(Expr<Integer> expr) {
         super(expr);
