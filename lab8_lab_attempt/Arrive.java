@@ -13,22 +13,6 @@ class Arrive implements Event {
             Server server = servers.get(serverIdx);
             if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
                 queueFlag = false;
-                
-                if (server.isSelfCheck()) {
-                    double timeOfService = server.getFinishTime();
-                    if (server.getFinishTime() < this.customer.getArrivalTime()) {
-                        timeOfService = this.customer.getArrivalTime();
-                    }
-                    for (int idx = 0; idx < servers.size(); idx++) {
-                        Server s = servers.get(idx);
-                        if (s.isSelfCheck()) {
-                            s = s.addCustomer(this.customer);
-                            s = s.setFinishTime(timeOfService);
-                            servers.set(idx, s);
-                        }
-                    }
-                    return new Pair<Event, ImList<Server>>(new Serve(this.customer, serverIdx, timeOfService, false, servers), servers);
-                }
                 server = server.addCustomer(this.customer);
                 double timeOfService = server.getFinishTime();
                 if (server.getFinishTime() < this.customer.getArrivalTime()) {
@@ -43,16 +27,6 @@ class Arrive implements Event {
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
             if (server.canQueue() && queueFlag) {
-                if (server.isSelfCheck()) {
-                    for (int idx = 0; idx < servers.size(); idx++) {
-                        Server s = servers.get(idx);
-                        if (s.isSelfCheck()) {
-                            s = s.addCustomer(this.customer);
-                        }
-                        servers = servers.set(idx, s);
-                    }
-                    return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
-                }
                 server = server.addCustomer(this.customer);
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
