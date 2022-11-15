@@ -35,6 +35,18 @@ class Server {
         queue = queue.add(customer);
         return new Server(this, this.nowServing, queue, this.finishTime);
     }
+
+    // public Server addNowServing(Customer customer) {
+    //     ImList<Customer> nowServing = this.nowServing;
+    //     nowServing = nowServing.add(customer);
+    //     return new Server(this, nowServing, queue, this.finishTime);
+    // }
+
+    // public Server popQueue() {
+    //     ImList<Customer> queue = this.queue;
+    //     queue = queue.remove(0);
+    //     return new Server(this, nowServing, queue, this.finishTime);
+    // }
     
     public Server popCustomer() {
         ImList<Customer> nowServing = this.nowServing;
@@ -51,6 +63,8 @@ class Server {
         return new Pair<Server, Double>(
             new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
+
+
 
     public Server rest() {
         double restTime = this.restTimes.get();

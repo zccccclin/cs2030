@@ -8,16 +8,11 @@ class Arrive implements Event {
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
-        boolean queueFlag = true;
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
             if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
-                queueFlag = false;
                 server = server.addCustomer(this.customer);
-                double timeOfService = server.getFinishTime();
-                if (server.getFinishTime() < this.customer.getArrivalTime()) {
-                    timeOfService = this.customer.getArrivalTime();
-                }
+                double timeOfService = this.customer.getArrivalTime();
                 server = server.setFinishTime(timeOfService);
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(
@@ -26,7 +21,7 @@ class Arrive implements Event {
         }
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
-            if (server.canQueue() && queueFlag) {
+            if (server.canQueue()) {
                 server = server.addCustomer(this.customer);
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);

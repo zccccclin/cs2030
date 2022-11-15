@@ -12,11 +12,13 @@ class Simulator {
             Server server = new Server(id, qmax, restTimes);
             servers = servers.add(server);
         }
-        for (int id = 1; id < numOfSelfCheck + 1; id++) {
-            Server selfCheck = new SelfCheckServer(numOfServers + id, qmax);
-            servers = servers.add(selfCheck);
+        if (numOfSelfCheck != 0) {
+            servers = servers.add(new Manager(numOfServers, numOfSelfCheck, qmax));
         }
-
+        // for (int id = 1; id < numOfSelfCheck + 1; id++) {
+        //     Server selfCheckManger = new Manager(numOfServers + id, qmax);
+        //     servers = servers.add(selfCheckManger);
+        // }
         this.servers = servers;
 
         ImList<Customer> customers = new ImList<Customer>();
