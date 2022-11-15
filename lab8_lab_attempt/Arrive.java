@@ -11,18 +11,27 @@ class Arrive implements Event {
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
             if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
-                server = server.addCustomer(this.customer);
+                server = server.addNowServing(this.customer);
                 double timeOfService = this.customer.getArrivalTime();
-                server = server.setFinishTime(timeOfService);
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(
-                    new Serve(this.customer, serverIdx, timeOfService, false, servers), servers);
+                    new Serve(this.customer, serverIdx, timeOfService, true, servers), servers);
             }
         }
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
             if (server.canQueue()) {
-                server = server.addCustomer(this.customer);
+                if (server.isSelfCheck()) {
+                    for (int idx = 0; idx < servers.size(); idx++) {
+                        Server s = servers.get(idx);
+                        if (s.isSelfCheck()) {
+                            s = s.addToQueue(this.customer);
+                            servers = servers.set(idx, s);
+                        }
+                    }
+                    return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
+                }
+                server = server.addToQueue(this.customer);
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
             }

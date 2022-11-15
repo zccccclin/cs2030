@@ -30,23 +30,23 @@ class Server {
         return new Server(this, this.nowServing, this.queue, time);
     }
 
-    public Server addCustomer(Customer customer) {
+    public Server addToQueue(Customer customer) {
         ImList<Customer> queue = this.queue;
         queue = queue.add(customer);
         return new Server(this, this.nowServing, queue, this.finishTime);
     }
 
-    // public Server addNowServing(Customer customer) {
-    //     ImList<Customer> nowServing = this.nowServing;
-    //     nowServing = nowServing.add(customer);
-    //     return new Server(this, nowServing, queue, this.finishTime);
-    // }
+    public Server addNowServing(Customer customer) {
+        ImList<Customer> nowServing = this.nowServing;
+        nowServing = nowServing.add(customer);
+        return new Server(this, nowServing, queue, this.finishTime);
+    }
 
-    // public Server popQueue() {
-    //     ImList<Customer> queue = this.queue;
-    //     queue = queue.remove(0);
-    //     return new Server(this, nowServing, queue, this.finishTime);
-    // }
+    public Server popQueue() {
+        ImList<Customer> queue = this.queue;
+        queue = queue.remove(0);
+        return new Server(this, nowServing, queue, this.finishTime);
+    }
     
     public Server popCustomer() {
         ImList<Customer> nowServing = this.nowServing;
@@ -55,16 +55,21 @@ class Server {
     }
 
     public Pair<Server, Double> serveCustomer(double timeOfService) {
-        Customer nowServing = this.queue.get(0);
+        ImList<Customer> updatedNowServing = this.nowServing;
         ImList<Customer> updatedQueue = this.queue;
-        updatedQueue = updatedQueue.remove(0);
-        ImList<Customer> updatedNowServing = this.nowServing.add(nowServing);
-        double finishTime = timeOfService + nowServing.getServiceTime();
+        if (this.canServe()) {
+            Customer nowServing = this.queue.get(0);
+            updatedQueue = updatedQueue.remove(0);
+            updatedNowServing = updatedNowServing.add(nowServing);
+        }
+        double finishTime = timeOfService + updatedNowServing.get(0).getServiceTime();
         return new Pair<Server, Double>(
             new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
 
-
+    public Server updateQueue(ImList<Customer> q) {
+        return new Server(this, this.nowServing, q, this.finishTime);
+    }
 
     public Server rest() {
         double restTime = this.restTimes.get();

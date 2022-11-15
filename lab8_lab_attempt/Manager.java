@@ -1,35 +1,32 @@
-import java.util.function.Supplier;
-
 class Manager extends Server {
-    private final ImList<Server> serverList;
-    private final ImList<String> serverIdList;
-
-    Manager(int numOfServers, int numOfSelfCheck, int maxQ) {
-        super(numOfServers + 1, maxQ, () -> 0.0);
-        ImList<Server> servers = new ImList<Server>();
-        ImList<String> serverIds = new ImList<String>();
-        for (int i = numOfServers; i < (numOfServers + numOfSelfCheck); i++) {
-            servers = servers.add(new Server(i + 1,0, () -> 0.0));
-            serverIds = serverIds.add("self-check " + ((Integer)(i + 1)).toString());
-        }
-        this.serverList = servers;
-        this.serverIdList = serverIds;
+    Manager(int id, int maxQ) {
+        super(id, maxQ, () -> 0.0);
     }
 
     Manager(Manager manager, ImList<Customer> nowServing, ImList<Customer> queue, double finishTime) {
         super(manager, nowServing, queue, finishTime);
-        this.serverList = manager.serverList;
-        this.serverIdList = manager.serverIdList;
     }
 
     public Manager setFinishTime(double time) {
         return new Manager(this, this.nowServing, this.queue, time);
     }
 
-    public Manager addCustomer(Customer customer) {
+    public Manager addToQueue(Customer customer) {
         ImList<Customer> queue = this.queue;
         queue = queue.add(customer);
         return new Manager(this, this.nowServing, queue, this.finishTime);
+    }
+
+    public Manager addNowServing(Customer customer) {
+        ImList<Customer> nowServing = this.nowServing;
+        nowServing = nowServing.add(customer);
+        return new Manager(this, nowServing, queue, this.finishTime);
+    }
+
+    public Manager popQueue() {
+        ImList<Customer> queue = this.queue;
+        queue = queue.remove(0);
+        return new Manager(this, nowServing, queue, this.finishTime);
     }
     
     public Manager popCustomer() {
@@ -38,13 +35,19 @@ class Manager extends Server {
         return new Manager(this, nowServing, this.queue, this.finishTime);
     }
 
+    public Manager updateQueue(ImList<Customer> q) {
+        return new Manager(this, this.nowServing, q, this.finishTime);
+    }
+    
     public Pair<Server, Double> serveCustomer(double timeOfService) {
-        Customer nowServing = this.queue.get(0);
+        ImList<Customer> updatedNowServing = this.nowServing;
         ImList<Customer> updatedQueue = this.queue;
-        updatedQueue = updatedQueue.remove(0);
-        ImList<Customer> updatedNowServing = this.nowServing.add(nowServing);
-        double finishTime = timeOfService + nowServing.getServiceTime();
-        System.out.println(updatedNowServing.toString());
+        if (this.canServe()) {
+            Customer nowServing = this.queue.get(0);
+            updatedQueue = updatedQueue.remove(0);
+            updatedNowServing = updatedNowServing.add(nowServing);
+        }
+        double finishTime = timeOfService + updatedNowServing.get(0).getServiceTime();
         return new Pair<Server, Double>(
             new Manager(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
@@ -52,22 +55,6 @@ class Manager extends Server {
     public Manager rest() {
         double restTime = this.restTimes.get();
         return new Manager(this, this.nowServing, this.queue, this.finishTime + restTime);
-    }
-
-    public double getFinishTime() {
-        return this.finishTime;
-    }
-
-    public boolean nextInLine(Customer customer) {
-        return this.queue.get(0).getId() == customer.getId();
-    }
-    
-    public boolean canQueue() {
-        return this.queue.size() < this.maxQ;
-    }
-
-    public boolean canServe() {
-        return this.nowServing.size() <= this.serverIdList.size();
     }
     
     public String getIdString() {

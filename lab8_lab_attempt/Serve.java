@@ -24,6 +24,13 @@ class Serve implements Event {
             server = result.first();
             double finishTime = result.second();
             servers = servers.set(this.serverIdx, server);
+            for (int idx = 0; idx < servers.size(); idx++) {
+                Server s = servers.get(idx);
+                if (s.isSelfCheck()) {
+                    s = s.updateQueue(server.queue);
+                    servers.set(idx, s);
+                }
+            }
             return new Pair<Event, ImList<Server>>(
                 new Done(this.customer, this.serverIdx, finishTime, servers), servers);
         }

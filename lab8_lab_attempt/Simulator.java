@@ -12,13 +12,13 @@ class Simulator {
             Server server = new Server(id, qmax, restTimes);
             servers = servers.add(server);
         }
-        if (numOfSelfCheck != 0) {
-            servers = servers.add(new Manager(numOfServers, numOfSelfCheck, qmax));
-        }
-        // for (int id = 1; id < numOfSelfCheck + 1; id++) {
-        //     Server selfCheckManger = new Manager(numOfServers + id, qmax);
-        //     servers = servers.add(selfCheckManger);
+        // if (numOfSelfCheck != 0) {
+        //     servers = servers.add(new Manager(numOfServers, numOfSelfCheck, qmax));
         // }
+        for (int id = 1; id < numOfSelfCheck + 1; id++) {
+            Server selfCheckManger = new Manager(numOfServers + id, qmax);
+            servers = servers.add(selfCheckManger);
+        }
         this.servers = servers;
 
         ImList<Customer> customers = new ImList<Customer>();
@@ -47,7 +47,8 @@ class Simulator {
         double totalWaitTime = 0;
 
         while (!eventQueue.isEmpty()) {
-            //System.out.println(eventQueue);
+            // System.out.println("______________________");
+            // System.out.println(output);
             Event event = eventQueue.poll().first();
             eventQueue = eventQueue.poll().second();
             if (event.getEvent() != "EXIT") {
