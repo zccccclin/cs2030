@@ -3,8 +3,8 @@ class Manager extends Server {
         super(id, maxQ, () -> 0.0);
     }
 
-    Manager(Manager manager, ImList<Customer> nowServing, ImList<Customer> queue, double finishTime) {
-        super(manager, nowServing, queue, finishTime);
+    Manager(Manager m, ImList<Customer> nS, ImList<Customer> q, double fT) {
+        super(m, nS, q, fT);
     }
 
     public Manager setFinishTime(double time) {

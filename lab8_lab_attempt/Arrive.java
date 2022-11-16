@@ -29,11 +29,13 @@ class Arrive implements Event {
                             servers = servers.set(idx, s);
                         }
                     }
-                    return new Pair<Event, ImList<Server>>(new Wait(customer, serverIdx, servers), servers);
+                    return new Pair<Event, ImList<Server>>(
+                        new Wait(customer, serverIdx, servers), servers);
                 }
                 server = server.addToQueue(customer);
                 servers = servers.set(serverIdx, server);
-                return new Pair<Event, ImList<Server>>(new Wait(customer, serverIdx, servers), servers);
+                return new Pair<Event, ImList<Server>>(
+                    new Wait(customer, serverIdx, servers), servers);
             }
         }
         return new Pair<Event, ImList<Server>>(new Leave(customer), servers);

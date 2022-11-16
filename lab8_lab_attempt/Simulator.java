@@ -41,7 +41,7 @@ class Simulator {
             eventQueue = eventQueue.add(event);
         }
 
-        ImList<Server> updatedServers = servers;
+        ImList<Server> updatedServers = this.servers;
         int serveCnt = 0;
         int leaveCnt = 0;
         double totalWaitTime = 0;

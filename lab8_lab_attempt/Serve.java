@@ -5,16 +5,16 @@ class Serve implements Event {
     private final String eventId;
     private final ImList<Server> serverList;
 
-    Serve(Customer customer, int serverIdx, double timeOfService, boolean nowServing, ImList<Server> serverList) {
-        this.customer = customer;
-        this.serverIdx = serverIdx;
-        this.time = timeOfService;
-        if (nowServing) {
+    Serve(Customer c, int sI, double tos, boolean nS, ImList<Server> sL) {
+        this.customer = c;
+        this.serverIdx = sI;
+        this.time = tos;
+        if (nS) {
             this.eventId = "SERVE";
         } else {
             this.eventId = "FUTURESERVE";
         }
-        this.serverList = serverList;
+        this.serverList = sL;
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
