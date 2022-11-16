@@ -12,10 +12,20 @@ class Wait implements Event {
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
-        Server server = servers.get(this.serverIdx);
+        Server server = servers.get(serverIdx);
         double timeOfService = server.getFinishTime();
+        int finalIdx = serverIdx;
+        if (server.isSelfCheck()) {
+            for (int idx = 0; idx < servers.size(); idx++) {
+                Server s = servers.get(idx);
+                if (s.isSelfCheck() && s.getFinishTime() < timeOfService) {
+                    timeOfService = s.getFinishTime();
+                    finalIdx = idx;
+                }
+            }
+        }
         return new Pair<Event, ImList<Server>>(
-            new Serve(this.customer, this.serverIdx, timeOfService, false, servers), servers); 
+            new Serve(customer, finalIdx, timeOfService, false, servers), servers); 
     }
 
     public double getWaitTime() {
@@ -36,7 +46,7 @@ class Wait implements Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f", this.time) + " " + this.customer.getId() + 
+        return String.format("%.3f", time) + " " + customer.getId() + 
             " waits at " + serverList.get(serverIdx).getIdString();
     }
 }

@@ -8,57 +8,37 @@ class Arrive implements Event {
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
-        boolean queueFlag = true;
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
-            if (server.getFinishTime() <= this.customer.getArrivalTime() && server.canServe()) {
-                queueFlag = false;
-                
-                if (server.isSelfCheck()) {
-                    double timeOfService = server.getFinishTime();
-                    if (server.getFinishTime() < this.customer.getArrivalTime()) {
-                        timeOfService = this.customer.getArrivalTime();
-                    }
-                    for (int idx = 0; idx < servers.size(); idx++) {
-                        Server s = servers.get(idx);
-                        if (s.isSelfCheck()) {
-                            s = s.addCustomer(this.customer);
-                            s = s.setFinishTime(timeOfService);
-                            servers.set(idx, s);
-                        }
-                    }
-                    return new Pair<Event, ImList<Server>>(new Serve(this.customer, serverIdx, timeOfService, false, servers), servers);
-                }
-                server = server.addCustomer(this.customer);
-                double timeOfService = server.getFinishTime();
-                if (server.getFinishTime() < this.customer.getArrivalTime()) {
-                    timeOfService = this.customer.getArrivalTime();
-                }
-                server = server.setFinishTime(timeOfService);
+            if (server.getFinishTime() <= customer.getArrivalTime() && server.canServe()) {
+                server = server.addNowServing(customer);
+                double timeOfService = customer.getArrivalTime();
                 servers = servers.set(serverIdx, server);
                 return new Pair<Event, ImList<Server>>(
-                    new Serve(this.customer, serverIdx, timeOfService, false, servers), servers);
+                    new Serve(customer, serverIdx, timeOfService, true, servers), servers);
             }
         }
         for (int serverIdx = 0; serverIdx < servers.size(); serverIdx++) {
             Server server = servers.get(serverIdx);
-            if (server.canQueue() && queueFlag) {
+            if (server.canQueue()) {
                 if (server.isSelfCheck()) {
                     for (int idx = 0; idx < servers.size(); idx++) {
                         Server s = servers.get(idx);
                         if (s.isSelfCheck()) {
-                            s = s.addCustomer(this.customer);
+                            s = s.addToQueue(customer);
+                            servers = servers.set(idx, s);
                         }
-                        servers = servers.set(idx, s);
                     }
-                    return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
+                    return new Pair<Event, ImList<Server>>(
+                        new Wait(customer, serverIdx, servers), servers);
                 }
-                server = server.addCustomer(this.customer);
+                server = server.addToQueue(customer);
                 servers = servers.set(serverIdx, server);
-                return new Pair<Event, ImList<Server>>(new Wait(this.customer, serverIdx, servers), servers);
+                return new Pair<Event, ImList<Server>>(
+                    new Wait(customer, serverIdx, servers), servers);
             }
         }
-        return new Pair<Event, ImList<Server>>(new Leave(this.customer), servers);
+        return new Pair<Event, ImList<Server>>(new Leave(customer), servers);
     }
     
     public double getWaitTime() {
@@ -66,11 +46,11 @@ class Arrive implements Event {
     }
     
     public int getOrder() {
-        return this.customer.getId();
+        return customer.getId();
     }
 
     public double getTime() {
-        return this.time;
+        return time;
     }
 
     public String getEvent() {
@@ -79,7 +59,7 @@ class Arrive implements Event {
         
     @Override
     public String toString() {
-        return String.format("%.3f", this.time) + " " + this.customer.getId() + " arrives";
+        return String.format("%.3f", time) + " " + customer.getId() + " arrives";
     }
 }
 

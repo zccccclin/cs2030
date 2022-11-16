@@ -16,11 +16,11 @@ class Leave implements Event {
     }
     
     public int getOrder() {
-        return this.customer.getId();
+        return customer.getId();
     }
 
     public double getTime() {
-        return this.time;
+        return time;
     }
 
     public String getEvent() {
@@ -29,6 +29,6 @@ class Leave implements Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f", this.time) + " " + this.customer.getId() + " leaves";
+        return String.format("%.3f", time) + " " + customer.getId() + " leaves";
     }
 }

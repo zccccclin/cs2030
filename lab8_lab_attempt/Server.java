@@ -2,11 +2,11 @@ import java.util.function.Supplier;
 
 class Server {
     private final int id;
-    protected final ImList<Customer> queue;
-    protected final ImList<Customer> nowServing;
-    protected final int maxQ;
-    protected final double finishTime;
-    protected final Supplier<Double> restTimes;
+    private final ImList<Customer> queue;
+    private final ImList<Customer> nowServing;
+    private final int maxQ;
+    private final double finishTime;
+    private final Supplier<Double> restTimes;
 
     Server(int id, int maxQ, Supplier<Double> restTimes) {
         this.id = id;
@@ -27,66 +27,93 @@ class Server {
     }
 
     public Server setFinishTime(double time) {
-        return new Server(this, this.nowServing, this.queue, time);
+        return new Server(this, nowServing, queue, time);
     }
 
-    public Server addCustomer(Customer customer) {
+    public Server addToQueue(Customer customer) {
         ImList<Customer> queue = this.queue;
         queue = queue.add(customer);
-        return new Server(this, this.nowServing, queue, this.finishTime);
+        return new Server(this, nowServing, queue, finishTime);
+    }
+
+    public Server addNowServing(Customer customer) {
+        ImList<Customer> nowServing = this.nowServing;
+        nowServing = nowServing.add(customer);
+        return new Server(this, nowServing, queue, finishTime);
+    }
+
+    public Server popQueue() {
+        ImList<Customer> queue = this.queue;
+        queue = queue.remove(0);
+        return new Server(this, nowServing, queue, finishTime);
     }
     
     public Server popCustomer() {
         ImList<Customer> nowServing = this.nowServing;
         nowServing = nowServing.remove(0);
-        return new Server(this, nowServing, this.queue, this.finishTime);
+        return new Server(this, nowServing, queue, finishTime);
     }
 
     public Pair<Server, Double> serveCustomer(double timeOfService) {
-        Customer nowServing = this.queue.get(0);
-        ImList<Customer> updatedQueue = this.queue;
-        updatedQueue = updatedQueue.remove(0);
-        ImList<Customer> updatedNowServing = this.nowServing.add(nowServing);
-        double finishTime = timeOfService + nowServing.getServiceTime();
+        ImList<Customer> updatedNowServing = nowServing;
+        ImList<Customer> updatedQueue = queue;
+        if (canServe()) {
+            Customer nowServing = queue.get(0);
+            updatedQueue = updatedQueue.remove(0);
+            updatedNowServing = updatedNowServing.add(nowServing);
+        }
+        double finishTime = timeOfService + updatedNowServing.get(0).getServiceTime();
         return new Pair<Server, Double>(
             new Server(this, updatedNowServing, updatedQueue, finishTime), finishTime);
     }
 
+    public Server updateQueue(ImList<Customer> q) {
+        return new Server(this, nowServing, q, finishTime);
+    }
+
     public Server rest() {
-        double restTime = this.restTimes.get();
-        return new Server(this, this.nowServing, this.queue, this.finishTime + restTime);
+        double restTime = restTimes.get();
+        return new Server(this, nowServing, queue, finishTime + restTime);
     }
 
     public double getFinishTime() {
-        return this.finishTime;
+        return finishTime;
     }
 
     public boolean nextInLine(Customer customer) {
-        return this.queue.get(0).getId() == customer.getId();
+        return queue.get(0).getId() == customer.getId();
     }
     
     public boolean canQueue() {
-        return this.queue.size() < this.maxQ;
+        return queue.size() < maxQ;
     }
 
     public boolean canServe() {
-        return this.nowServing.isEmpty();
+        return nowServing.isEmpty();
     }
     
     public String getIdString() {
-        return ((Integer) this.id).toString();
+        return ((Integer) id).toString();
     }
 
     public int getId() {
-        return this.id;
+        return id;
     }
 
+    public ImList<Customer> getQueue() {
+        return queue;
+    }
+    
+    public ImList<Customer> getNowServing() {
+        return nowServing;
+    }
+    
     public boolean isSelfCheck() {
         return false;
     }
 
     @Override
     public String toString() {
-        return "Server " + this.getId() + ": " + this.queue.toString();
+        return "Server " + getId() + ": " + queue.toString();
     }
 }
