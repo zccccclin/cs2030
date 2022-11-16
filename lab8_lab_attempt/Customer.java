@@ -10,20 +10,20 @@ class Customer {
     }
 
     public Double getArrivalTime() {
-        return this.data.first();
+        return data.first();
     }
 
     public Double getServiceTime() {
-        return this.data.second().get();
+        return data.second().get();
     }
     
     public int getId() {
-        return this.id;
+        return id;
     }
     
     @Override
     public String toString() {
-        return "Customer " + this.getId();
+        return "Customer " + getId();
     }
 }
         

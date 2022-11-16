@@ -8,42 +8,42 @@ class Manager extends Server {
     }
 
     public Manager setFinishTime(double time) {
-        return new Manager(this, this.nowServing, this.queue, time);
+        return new Manager(this, getNowServing(), getQueue(), time);
     }
 
     public Manager addToQueue(Customer customer) {
-        ImList<Customer> queue = this.queue;
+        ImList<Customer> queue = getQueue();
         queue = queue.add(customer);
-        return new Manager(this, this.nowServing, queue, this.finishTime);
+        return new Manager(this, getNowServing(), queue, getFinishTime());
     }
 
     public Manager addNowServing(Customer customer) {
-        ImList<Customer> nowServing = this.nowServing;
+        ImList<Customer> nowServing = getNowServing();
         nowServing = nowServing.add(customer);
-        return new Manager(this, nowServing, queue, this.finishTime);
+        return new Manager(this, nowServing, getQueue(), getFinishTime());
     }
 
     public Manager popQueue() {
-        ImList<Customer> queue = this.queue;
+        ImList<Customer> queue = getQueue();
         queue = queue.remove(0);
-        return new Manager(this, nowServing, queue, this.finishTime);
+        return new Manager(this, getNowServing(), queue, getFinishTime());
     }
     
     public Manager popCustomer() {
-        ImList<Customer> nowServing = this.nowServing;
+        ImList<Customer> nowServing = getNowServing();
         nowServing = nowServing.remove(0);
-        return new Manager(this, nowServing, this.queue, this.finishTime);
+        return new Manager(this, nowServing, getQueue(), getFinishTime());
     }
 
     public Manager updateQueue(ImList<Customer> q) {
-        return new Manager(this, this.nowServing, q, this.finishTime);
+        return new Manager(this, getNowServing(), q, getFinishTime());
     }
     
     public Pair<Server, Double> serveCustomer(double timeOfService) {
-        ImList<Customer> updatedNowServing = this.nowServing;
-        ImList<Customer> updatedQueue = this.queue;
-        if (this.canServe()) {
-            Customer nowServing = this.queue.get(0);
+        ImList<Customer> updatedNowServing = getNowServing();
+        ImList<Customer> updatedQueue = getQueue();
+        if (canServe()) {
+            Customer nowServing = getQueue().get(0);
             updatedQueue = updatedQueue.remove(0);
             updatedNowServing = updatedNowServing.add(nowServing);
         }
@@ -53,12 +53,12 @@ class Manager extends Server {
     }
 
     public Manager rest() {
-        double restTime = this.restTimes.get();
-        return new Manager(this, this.nowServing, this.queue, this.finishTime + restTime);
+        double restTime = 0.0;
+        return new Manager(this, getNowServing(), getQueue(), getFinishTime() + restTime);
     }
     
     public String getIdString() {
-        return "self-check " + this.getId();
+        return "self-check " + getId();
     }
 
     @Override
@@ -68,6 +68,6 @@ class Manager extends Server {
 
     @Override
     public String toString() {
-        return "Server " + this.getId() + ": " + this.queue.toString();
+        return "Server " + getId() + ": " + getQueue().toString();
     }
 }

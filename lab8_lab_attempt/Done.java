@@ -12,10 +12,10 @@ class Done implements Event {
     }
 
     public Pair<Event, ImList<Server>> execute(ImList<Server> servers) {
-        Server server = servers.get(this.serverIdx);
+        Server server = servers.get(serverIdx);
         server = server.popCustomer();
         server = server.rest();
-        servers = servers.set(this.serverIdx, server);
+        servers = servers.set(serverIdx, server);
         return new Pair<Event, ImList<Server>>(new Exit(), servers);
     }
 
@@ -24,11 +24,11 @@ class Done implements Event {
     }
 
     public int getOrder() {
-        return this.customer.getId();
+        return customer.getId();
     }
 
     public double getTime() {
-        return this.time;
+        return time;
     }
 
     public String getEvent() {
@@ -37,7 +37,7 @@ class Done implements Event {
 
     @Override
     public String toString() {
-        return String.format("%.3f", this.time) + " " + this.customer.getId() + 
+        return String.format("%.3f", time) + " " + customer.getId() + 
             " done serving by " + serverList.get(serverIdx).getIdString();
     }
 }

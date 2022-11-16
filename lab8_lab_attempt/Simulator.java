@@ -41,14 +41,13 @@ class Simulator {
             eventQueue = eventQueue.add(event);
         }
 
-        ImList<Server> updatedServers = this.servers;
+        ImList<Server> updatedServers = servers;
         int serveCnt = 0;
         int leaveCnt = 0;
         double totalWaitTime = 0;
 
         while (!eventQueue.isEmpty()) {
-            // System.out.println("______________________");
-            // System.out.println(output);
+            // System.out.println(eventQueue);
             Event event = eventQueue.poll().first();
             eventQueue = eventQueue.poll().second();
             if (event.getEvent() != "EXIT") {

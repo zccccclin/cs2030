@@ -6,7 +6,7 @@ class Exit implements Event {
     }
 
     public double getTime() {
-        return this.time;
+        return time;
     }
     
     public int getOrder() {
@@ -18,7 +18,7 @@ class Exit implements Event {
     }
 
     public double getWaitTime() {
-        return this.time;
+        return time;
     }
     
     public String getEvent() {
