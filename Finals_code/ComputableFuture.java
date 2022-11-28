@@ -1,6 +1,6 @@
+// Computable Future
 class A {
     private final int x;
-
     A() {
         this(0);
     }

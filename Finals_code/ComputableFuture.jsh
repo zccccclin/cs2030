@@ -1,4 +1,5 @@
-/open A_R11.java
+/open ComputableFuture.java
+//Make foo a computablefuture.supplyAsync(takes in a Supplier)
 CompletableFuture<A> foo(A a) {
     return CompletableFuture.<A>supplyAsync(() -> a.incr())
         .thenApplyAsync(x -> x.decr());
