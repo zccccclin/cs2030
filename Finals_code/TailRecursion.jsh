@@ -6,7 +6,7 @@ interface Compute<T> {
     T evaluate();
 }
 
-class Base<T> implements Compute<T> {
+class Base<T> implements Compute<T> { 
     private final Supplier<T> supplier;
 
     Base(Supplier<T> supplier) {

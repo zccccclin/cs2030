@@ -1,4 +1,41 @@
-/open ComputableFuture.java
+// Computable Future
+class A {
+    private final int x;
+    A() {
+        this(0);
+    }
+
+    A(int x) {
+        this.x = x;
+    }
+
+    void sleep() {
+        System.out.println(Thread.currentThread().getName() + " " + x);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("interruptedi");
+        }
+    }
+
+    A incr() {
+        sleep();
+        return new A(this.x + 1);
+    }
+
+    A decr() {
+        sleep();
+        if (x < 0) {
+            throw new IllegalStateException();
+        }
+        return new A(this.x - 1);
+    }
+    
+    public String toString() {
+        return "" + x;
+    }
+}
+
 //Make foo a computablefuture.supplyAsync(takes in a Supplier)
 CompletableFuture<A> foo(A a) {
     return CompletableFuture.<A>supplyAsync(() -> a.incr())

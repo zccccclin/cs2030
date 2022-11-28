@@ -1,8 +1,8 @@
 int sum(int n) {
-    if (n == 0) {
+    if (n == 0) { // base case
         System.out.println("base case returns 0");
         return 0;
-    } else {
+    } else { // recursive case
         int ans = sum(n - 1) + n;
         System.out.println("adding " + n);
         return ans;

@@ -1,3 +1,4 @@
+// List of T, List of U and Combine them into List of R.
 <T, U, R> Stream<R> product(
     List<? extends T> list1,
     List<? extends U> list2,
