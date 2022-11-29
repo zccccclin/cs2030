@@ -12,7 +12,7 @@ class IFL<T> {
         this.isEmptyList = isEmptyList;
     }
 
-    //Stream.generate(() -> 1).map(..)
+    // Stream.generate(() -> 1).map(..)
     static <T> IFL<T> generate(Supplier<T> supplier) {
         Supplier<Optional<T>> newHead = () -> Optional.of(supplier.get());
         Supplier<IFL<T>> newTail = () -> IFL.generate(supplier);
